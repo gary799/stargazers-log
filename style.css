@@ -3,6 +3,75 @@ body {
   margin: 2rem;
 }
 
+#map {
+  min-height: 24rem;
+  flex: 1;
+  min-width: 0;
+}
+
+#map svg {
+  display: block;
+  width: 100%;
+  height: 24rem;
+}
+
+#map-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+#region-index {
+  flex: 0 0 12rem;
+}
+
+#region-index h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+#region-index ol {
+  margin: 0;
+  padding-left: 2.5rem;
+  list-style: decimal-leading-zero;
+}
+
+#region-index li {
+  padding: 0;
+}
+
+#region-index a {
+  display: block;
+  padding: 0.5rem 0.25rem;
+  color: #245c96;
+  text-decoration: none;
+}
+
+#region-index a:hover,
+#region-index a:focus,
+#region-index a.selected {
+  background: #e7f0fa;
+  color: #173f69;
+  text-decoration: underline;
+}
+
+#map .map-region {
+  cursor: pointer;
+  transition: fill 150ms ease;
+}
+
+#map .map-region:hover,
+#map .map-region:focus,
+#map .map-region.selected {
+  fill: #9bbde3;
+}
+
+#map .map-region:focus {
+  outline: none;
+  stroke: #245c96;
+  stroke-width: 5;
+}
+
 ul {
   list-style: none;
   padding: 0;
@@ -11,4 +80,19 @@ ul {
 li {
   padding: 0.5rem 0;
   border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 640px) {
+  #map-layout {
+    flex-direction: column;
+  }
+
+  #region-index {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  #region-index ol {
+    columns: 2;
+  }
 }
