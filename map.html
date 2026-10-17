@@ -34,6 +34,7 @@
       const regionIndex = document.querySelector("#region-index ol");
       const selectedRegions = new Set();
       const unknownRegions = [];
+      let hasInvalidRegionValues = false;
       const regionsByName = new Map(
         Array.from(regions, (region) => [region.dataset.region.toLowerCase(), region]),
       );
@@ -58,6 +59,9 @@
           : "Select a region on the map.";
         if (unknownRegions.length) {
           selection.textContent += ` Unrecognized regions in URL: ${unknownRegions.join(", ")}.`;
+        }
+        if (hasInvalidRegionValues) {
+          selection.textContent += " Invalid region values in URL; use letters and digits only.";
         }
       }
 
@@ -95,10 +99,13 @@
       const requestedRegions = new URLSearchParams(window.location.search)
         .getAll("regions")
         .flatMap((value) => value.split(","))
-        .map((name) => name.trim())
-        .filter(Boolean);
 
       requestedRegions.forEach((name) => {
+        if (!/^[a-z0-9]+$/i.test(name)) {
+          hasInvalidRegionValues = true;
+          return;
+        }
+
         const region = regionsByName.get(name.toLowerCase());
         if (region) {
           selectedRegions.add(region);
