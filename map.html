@@ -1,21 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Set the page encoding and browser title for the world map app. -->
     <meta charset="utf-8">
     <title>Stargazers log</title>
+
+    <!-- Link the stylesheet that controls the map layout and selected region styling. -->
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <!-- Page heading and introductory text for the interactive map section. -->
     <h1>My Maps</h1>
     <p>Maps go below here</p>
+
+    <!-- This container holds the region navigation list and the SVG map itself. -->
     <div id="map-layout">
+      <!-- Sidebar navigation that lists all available regions and lets users switch selections. -->
       <nav id="region-index" aria-label="Map region index">
         <h2>Regions</h2>
         <ol></ol>
       </nav>
+
+      <!-- The interactive map area, drawn as an SVG with each continent/region as a clickable path. -->
       <div id="map">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" role="group" aria-label="Interactive world map">
           <g fill="#e5e9ed" stroke="#ffffff" stroke-linejoin="round" stroke-width="3">
+            <!-- Each path represents one selectable region on the world map. -->
             <path class="map-region" data-region="North America" role="button" tabindex="0" aria-pressed="false" aria-label="North America" d="m77 119 35-29 48-9 19-20 34 8 13 18 41 4 18 22 33 8 7 19-23 18-17 29-29 9-10 25-24 4-8 23-24 6-12 25-20-4-6-20-17-6-10-28-20-14-7-29-19-17-15-27-20-22-5-34zm113 112 18 11 14 26-9 16-19-9-11-26zm65-128 14-10 13 8-7 15-16 1z"/>
             <path class="map-region" data-region="South America" role="button" tabindex="0" aria-pressed="false" aria-label="South America" d="m273 250 22 13 19 30 5 29-13 28 9 23-17 36-15 34-17 35-18 16-12-19 2-31-12-29-9-32-17-25 5-26 22-22 14-34 20-26z"/>
             <path class="map-region" data-region="Europe and Asia" role="button" tabindex="0" aria-pressed="false" aria-label="Europe and Asia" d="m447 133 26-18 35-5 17 14 24-8 27 13 34-8 23 16 34-2 26 17 34 3 16 16-9 16-28 4-17 15-35-7-17 11-32-7-27 17-22-3-13 18-25-8-5-22-20-14-21-4-12-19-22-2-18-21zm69 87 20 7 10 18-12 12-18-8-8-17zm-56-69 12-17 14 5 6 18-12 8-16-4z"/>
@@ -27,23 +37,36 @@
         </svg>
       </div>
     </div>
+
+    <!-- This status text updates to tell the user which region(s) are currently selected. -->
     <p id="map-selection" aria-live="polite">Select a region on the map.</p>
+
     <script>
+      // Grab every clickable map region and the page elements that display selection status.
       const regions = document.querySelectorAll(".map-region");
       const selection = document.querySelector("#map-selection");
       const regionIndex = document.querySelector("#region-index ol");
+
+      // Keep track of the currently selected regions and any names from the URL that do not match a map region.
       const selectedRegions = new Set();
       const unknownRegions = [];
       let hasInvalidRegionValues = false;
+
+      // Build a lookup so a region can be found quickly by its name from the URL query string.
       const regionsByName = new Map(
         Array.from(regions, (region) => [region.dataset.region.toLowerCase(), region]),
       );
 
+      // Update the map and sidebar UI to reflect the current selection state.
       function updateSelection() {
         regions.forEach((item) => {
           const isSelected = selectedRegions.has(item);
+
+          // Toggle the visible selected styling and accessibility state on each map region.
           item.classList.toggle("selected", isSelected);
           item.setAttribute("aria-pressed", String(isSelected));
+
+          // Update the matching sidebar entry so it also shows as selected.
           const indexLink = regionIndex.querySelector(`[href="#${item.id}"]`);
           indexLink.classList.toggle("selected", isSelected);
           if (isSelected) {
@@ -53,18 +76,24 @@
           }
         });
 
+        // Show the names of the selected regions in the status paragraph.
         const selectedNames = Array.from(selectedRegions, (region) => region.dataset.region);
         selection.textContent = selectedNames.length
           ? `Selected: ${selectedNames.join(", ")}`
           : "Select a region on the map.";
+
+        // If any URL values do not match valid regions, add a message explaining that.
         if (unknownRegions.length) {
           selection.textContent += ` Unrecognized regions in URL: ${unknownRegions.join(", ")}.`;
         }
+
+        // If the URL includes invalid characters, surface that issue in the status text.
         if (hasInvalidRegionValues) {
           selection.textContent += " Invalid region values in URL; use letters and digits only.";
         }
       }
 
+      // Toggle a region on or off and then refresh the display.
       function toggleRegion(region) {
         if (selectedRegions.has(region)) {
           selectedRegions.delete(region);
@@ -74,19 +103,24 @@
         updateSelection();
       }
 
+      // Build the list of clickable region links in the sidebar and attach behavior to each map region.
       regions.forEach((region, index) => {
         region.id = `map-region-${index + 1}`;
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.href = `#${region.id}`;
         link.textContent = region.dataset.region;
+
+        // Clicking a sidebar link toggles the region without causing the page to jump.
         link.addEventListener("click", (event) => {
           event.preventDefault();
           toggleRegion(region);
         });
+
         item.append(link);
         regionIndex.append(item);
 
+        // Allow clicking or keyboard activation (Enter/Space) on the SVG region itself.
         region.addEventListener("click", () => toggleRegion(region));
         region.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
@@ -96,16 +130,20 @@
         });
       });
 
+      // Read any region names passed in the URL query string, such as ?regions=North America,Europe
+      // and activate matching regions automatically when the page loads.
       const requestedRegions = new URLSearchParams(window.location.search)
         .getAll("regions")
-        .flatMap((value) => value.split(","))
+        .flatMap((value) => value.split(","));
 
       requestedRegions.forEach((name) => {
+        // Reject values that contain anything other than letters or numbers.
         if (!/^[a-z0-9]+$/i.test(name)) {
           hasInvalidRegionValues = true;
           return;
         }
 
+        // Match the URL value against a known region name and select it if it exists.
         const region = regionsByName.get(name.toLowerCase());
         if (region) {
           selectedRegions.add(region);
@@ -114,6 +152,7 @@
         }
       });
 
+      // Initialize the UI with the selected regions from the URL or empty state.
       updateSelection();
     </script>
   </body>
