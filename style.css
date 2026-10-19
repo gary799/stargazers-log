@@ -72,6 +72,39 @@ body {
   stroke-width: 5;
 }
 
+#map .region-star {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#map .region-star.selected {
+  visibility: visible;
+  animation: star-flash 1s infinite;
+}
+
+@keyframes star-flash {
+  0% {
+    opacity: 0.25;
+    /*transform: scale(0.45);*/
+  }
+
+  45% {
+    opacity: 0.5;
+    /*transform: scale(1.25);*/
+  }
+
+  100% {
+    opacity: 1.5;
+   /* transform: scale(1);*/
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #map .region-star.selected {
+    animation: none;
+  }
+}
+
 ul {
   list-style: none;
   padding: 0;
