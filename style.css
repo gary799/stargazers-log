@@ -61,15 +61,15 @@ body {
 }
 
 #map .map-region:hover,
-#map .map-region:focus,
+
 #map .map-region.selected {
   fill: #9bbde3;
 }
 
 #map .map-region:focus {
   outline: none;
-  stroke: #245c96;
-  stroke-width: 5;
+  /*stroke: #245c96;
+  stroke-width: 5;*/
 }
 
 #map .region-star {
@@ -79,28 +79,44 @@ body {
 
 #map .region-star.selected {
   visibility: visible;
-  animation: star-flash 1s infinite;
+  animation: star-flash 2s infinite;
+}
+
+#map .region-star-rotation {
+  transform-origin: 0 0;
+  animation: star-spin 2s linear infinite;
 }
 
 @keyframes star-flash {
   0% {
-    opacity: 0.25;
-    /*transform: scale(0.45);*/
+    opacity: .5;
   }
 
   45% {
-    opacity: 0.5;
-    /*transform: scale(1.25);*/
+    opacity: .7;
   }
 
   100% {
-    opacity: 1.5;
-   /* transform: scale(1);*/
+    opacity: 1;
+  }
+}
+
+@keyframes star-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   #map .region-star.selected {
+    animation: none;
+  }
+
+  #map .region-star-rotation {
     animation: none;
   }
 }

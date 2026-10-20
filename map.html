@@ -26,13 +26,13 @@
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" role="group" aria-label="Interactive world map">
           <g fill="#e5e9ed" stroke="#ffffff" stroke-linejoin="round" stroke-width="3">
             <!-- Each path represents one selectable region on the world map. -->
-            <path class="map-region" data-region="North America" role="button" tabindex="0" aria-pressed="false" aria-label="North America" d="m77 119 35-29 48-9 19-20 34 8 13 18 41 4 18 22 33 8 7 19-23 18-17 29-29 9-10 25-24 4-8 23-24 6-12 25-20-4-6-20-17-6-10-28-20-14-7-29-19-17-15-27-20-22-5-34zm113 112 18 11 14 26-9 16-19-9-11-26zm65-128 14-10 13 8-7 15-16 1z"/>
-            <path class="map-region" data-region="South America" role="button" tabindex="0" aria-pressed="false" aria-label="South America" d="m273 250 22 13 19 30 5 29-13 28 9 23-17 36-15 34-17 35-18 16-12-19 2-31-12-29-9-32-17-25 5-26 22-22 14-34 20-26z"/>
-            <path class="map-region" data-region="Europe and Asia" role="button" tabindex="0" aria-pressed="false" aria-label="Europe and Asia" d="m447 133 26-18 35-5 17 14 24-8 27 13 34-8 23 16 34-2 26 17 34 3 16 16-9 16-28 4-17 15-35-7-17 11-32-7-27 17-22-3-13 18-25-8-5-22-20-14-21-4-12-19-22-2-18-21zm69 87 20 7 10 18-12 12-18-8-8-17zm-56-69 12-17 14 5 6 18-12 8-16-4z"/>
-            <path class="map-region" data-region="Africa" role="button" tabindex="0" aria-pressed="false" aria-label="Africa" d="m485 238 26-9 29 9 22 25 8 33-15 32-8 33-25 30-14 29-18-10-3-27-18-19-4-30-13-28 3-34 15-20z"/>
-            <path class="map-region" data-region="Australia" role="button" tabindex="0" aria-pressed="false" aria-label="Australia" d="m707 300 29-20 34 7 24 18 37 1 24 18-5 22-34 9-22 26-31 9-20-18-27 1-19-23-13-27 7-17z"/>
-            <path class="map-region" data-region="New Zealand" role="button" tabindex="0" aria-pressed="false" aria-label="New Zealand" d="m844 387 24-12 31 5 17 22-12 24-29 7-24-13-14-18z"/>
-            <path class="map-region" data-region="Northeast Asia" role="button" tabindex="0" aria-pressed="false" aria-label="Northeast Asia" d="m823 96 26-16 35 7 25 21-8 27-28 7-26-13-20-17z"/>
+            <path class="map-region" data-region="North America" role="button" tabindex="0" aria-label="North America" d="m77 119 35-29 48-9 19-20 34 8 13 18 41 4 18 22 33 8 7 19-23 18-17 29-29 9-10 25-24 4-8 23-24 6-12 25-20-4-6-20-17-6-10-28-20-14-7-29-19-17-15-27-20-22-5-34zm113 112 18 11 14 26-9 16-19-9-11-26zm65-128 14-10 13 8-7 15-16 1z"/>
+            <path class="map-region" data-region="South America" role="button" tabindex="0" aria-label="South America" d="m273 250 22 13 19 30 5 29-13 28 9 23-17 36-15 34-17 35-18 16-12-19 2-31-12-29-9-32-17-25 5-26 22-22 14-34 20-26z"/>
+            <path class="map-region" data-region="Europe and Asia" role="button" tabindex="0" aria-label="Europe and Asia" d="m447 133 26-18 35-5 17 14 24-8 27 13 34-8 23 16 34-2 26 17 34 3 16 16-9 16-28 4-17 15-35-7-17 11-32-7-27 17-22-3-13 18-25-8-5-22-20-14-21-4-12-19-22-2-18-21zm69 87 20 7 10 18-12 12-18-8-8-17zm-56-69 12-17 14 5 6 18-12 8-16-4z"/>
+            <path class="map-region" data-region="Africa" role="button" tabindex="0" aria-label="Africa" d="m485 238 26-9 29 9 22 25 8 33-15 32-8 33-25 30-14 29-18-10-3-27-18-19-4-30-13-28 3-34 15-20z"/>
+            <path class="map-region" data-region="Australia" role="button" tabindex="0" aria-label="Australia" d="m707 300 29-20 34 7 24 18 37 1 24 18-5 22-34 9-22 26-31 9-20-18-27 1-19-23-13-27 7-17z"/>
+            <path class="map-region" data-region="New Zealand" role="button" tabindex="0" aria-label="New Zealand" d="m844 387 24-12 31 5 17 22-12 24-29 7-24-13-14-18z"/>
+            <path class="map-region" data-region="Northeast Asia" role="button" tabindex="0" aria-label="Northeast Asia" d="m823 96 26-16 35 7 25 21-8 27-28 7-26-13-20-17z"/>
           </g>
           <defs>
             <symbol id="selection-star" viewBox="0 0 24 24">
@@ -72,17 +72,11 @@
 
           // Toggle the visible selected styling and accessibility state on each map region.
           item.classList.toggle("selected", isSelected);
-          item.setAttribute("aria-pressed", String(isSelected));
           starsByRegion.get(item).classList.toggle("selected", isSelected);
 
           // Update the matching sidebar entry so it also shows as selected.
           const indexLink = regionIndex.querySelector(`[href="#${item.id}"]`);
           indexLink.classList.toggle("selected", isSelected);
-          if (isSelected) {
-            indexLink.setAttribute("aria-current", "true");
-          } else {
-            indexLink.removeAttribute("aria-current");
-          }
         });
 
         // Show the names of the selected regions in the status paragraph.
@@ -116,13 +110,21 @@
       regions.forEach((region, index) => {
         region.id = `map-region-${index + 1}`;
         const bounds = region.getBBox();
-        const star = document.createElementNS("http://www.w3.org/2000/svg", "use");
-        star.setAttribute("href", "#selection-star");
-        star.setAttribute("x", String(bounds.x + bounds.width / 2 - 9));
-        star.setAttribute("y", String(bounds.y + bounds.height / 2 - 9));
-        star.setAttribute("width", "18");
-        star.setAttribute("height", "18");
+        const centerX = bounds.x + bounds.width / 2;
+        const centerY = bounds.y + bounds.height / 2;
+        const star = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const rotatingStar = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const starShape = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        star.setAttribute("transform", `translate(${centerX} ${centerY})`);
         star.classList.add("region-star");
+        rotatingStar.classList.add("region-star-rotation");
+        starShape.setAttribute("href", "#selection-star");
+        starShape.setAttribute("x", "-19");
+        starShape.setAttribute("y", "-17.5");
+        starShape.setAttribute("width", "38");
+        starShape.setAttribute("height", "38");
+        rotatingStar.append(starShape);
+        star.append(rotatingStar);
         regionStars.append(star);
         starsByRegion.set(region, star);
 
